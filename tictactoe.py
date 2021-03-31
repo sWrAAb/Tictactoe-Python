@@ -1,4 +1,5 @@
 import random
+from os import system
 
 # Board
 
@@ -7,6 +8,7 @@ board = [" "," "," "," "," "," "," "," "," "]
 # Random player
 
 def random_player():
+    '''Randomize starting player'''
     if random.randint(0,1) == 0:
         print("Computer is first")
         return "Computer"
@@ -29,3 +31,19 @@ def display_board():
 
 display_board()
 
+
+available_moves = ["1","2","3","4","5","6","7","8","9"]
+print("Available moves:")
+print(available_moves)
+
+def game():
+    game_turn()
+
+def game_turn():
+    position = input("Enter position: ")
+    position = int(position) -1
+
+    board[position] = "X"
+    display_board()
+
+game()
