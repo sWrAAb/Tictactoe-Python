@@ -47,6 +47,7 @@ def display_board():
     print("---+---+---")
     print(" " + board[6] + " | " + board[7] + " | " + board[8] + "     7 | 8 | 9")
     print()
+    print("Available moves:")
     print(available_moves)
 
 def check_rows():
@@ -58,6 +59,12 @@ def check_rows():
     if row_1 or row_2 or row_3:
         ''' If rows match game stops'''
         active_game = False
+    if row_1:
+        return board[0]
+    if row_2:
+        return board[3]
+    if row_3:
+        return board[6]        
     return
 
 def check_columns():
@@ -69,6 +76,12 @@ def check_columns():
     if column_1 or column_2 or column_3:
         ''' If columns match game stops'''
         active_game = False
+    if column_1:
+        return board[0]
+    if column_2:
+        return board[1]
+    if column_3:
+        return board[2]    
     return
 
 def check_diagonals():
@@ -79,26 +92,40 @@ def check_diagonals():
     if diagonal_1 or diagonal_2:
         ''' If diagonals match game stops'''
         active_game = False
+    if diagonal_1:
+        return board[0]
+    if diagonal_2:
+        return board[2]
     return
 
 
 def check_win():
     ''' Checks if board positions match '''
-    check_rows()
-    check_columns()
-    check_diagonals()
+    global winner
+    row_win = check_rows()
+    column_win = check_columns()
+    diagonal_win = check_diagonals()
+    if row_win:
+        winner = row_win
+    elif column_win:
+        winner = column_win
+    elif diagonal_win:
+        winner = diagonal_win
+    else:
+        winner = None
 
 
 def check_tie():
     ''' If all fields are full game stops'''
-    global count
     global active_game
-    if count == 9:
+    if " " not in board and winner == None:
         active_game = False
+        print("Tie!")
     return
 
 def switch_player():
     global current_player
+    ''' switches player every turn'''
     if current_player == "X":
         current_player = "O"
     elif current_player == "O":
@@ -118,20 +145,41 @@ def game():
     if winner == "X" or winner == "O":
         print(winner + " won!")
     elif winner == None:
-        print("Tie!")
+        return
 
 def game_turn(player):
     global count
+    global available_moves
     print(player + "'s turn.")
-    position = input("Enter position: ")
+    position = input("Enter position from 1 to 9: ")
+
+    if position not in available_moves:
+        position = input("Invalid position. Enter position from 1 to 9: ")
+    ''' There must be easier way to do this. '''
+    if position == "1":
+        available_moves.remove("1")
+    elif position == "2":
+        available_moves.remove("2")
+    elif position == "3":
+        available_moves.remove("3")
+    elif position == "4":
+        available_moves.remove("4")
+    elif position == "5":
+        available_moves.remove("5")
+    elif position == "6":
+        available_moves.remove("6")
+    elif position == "7":
+        available_moves.remove("7")
+    elif position == "8":
+        available_moves.remove("8")
+    elif position == "9":
+        available_moves.remove("9")
     '''fixes input so it matches board indexes'''
     position = int(position) -1
     board[position] = player
     count += 1
-    print("Available moves:")
-    print(available_moves)
-    display_board()
     print("Turn " + str(count))
+    display_board()
     
 
 game()
