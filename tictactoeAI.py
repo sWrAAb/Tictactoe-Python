@@ -1,8 +1,33 @@
+import random
+
+player = None
+computer = None
+
+
 # Board as dictionaries 
 
 board ={1:" ",2:" ",3:" ",
         4:" ",5:" ",6:" ",
         7:" ",8:" ",9:" "}
+
+# Random player start
+
+def random_player():
+    global player
+    global computer
+    '''Randomize starting player'''
+    if random.randint(0,1) == 0:
+        computer = "X"
+        player = "O"
+        print("Computer is first")
+    else:
+        player = "X"
+        computer = "O"
+        print("Player is first")
+
+random_player()
+print(player)
+print(computer)
 
 def print_board(board):
     ''' Prints visual board in terminal'''
@@ -69,3 +94,4 @@ def insert_letter(letter,position):
         input(int("Input new position: "))
         insert_letter(letter,position)
         return
+
