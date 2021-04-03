@@ -35,6 +35,10 @@ random_player()
 
 available_moves = ["1","2","3","4","5","6","7","8","9"]
 
+# Available choice
+
+available_choices= ["y","Y","n","N"]
+
 
 # Display board
 
@@ -118,9 +122,11 @@ def check_win():
 def check_tie():
     ''' If all fields are full game stops'''
     global active_game
+    global tie
     if " " not in board and winner == None:
         active_game = False
         print("Tie!")
+        tie = True
     return
 
 def switch_player():
@@ -131,6 +137,28 @@ def switch_player():
     elif current_player == "O":
         current_player = "X"
     return
+
+def restart():
+    choice = input("Do you want to play again?(y/n) ")
+    
+    if choice == "y" or choice == "Y":
+            global board
+            global active_game
+            global count
+            global available_moves
+            global current_player
+            board = [" "," "," "," "," "," "," "," "," "]
+            available_moves = ["1","2","3","4","5","6","7","8","9"]
+            active_game = True
+            count = 0
+            winner = None
+            current_player = "X"
+            game()
+    elif choice == "n" or choice == "N":
+            exit() # exit program
+    
+    while choice not in available_choices:
+        choice = input("Do you want to play again?(y/n) ")
 
 def game():
     '''Main function for gameplay'''
@@ -147,42 +175,51 @@ def game():
     elif winner == None:
         return
 
+    if not active_game:
+        restart()
+
 def game_turn(player):
     global count
     global available_moves
     print(player + "'s turn.")
-    position = input("Enter position from 1 to 9: ")
+    position = input("Enter position: ")
 
-    if position not in available_moves:
-        position = input("Invalid position. Enter position from 1 to 9: ")
-    ''' There must be easier way to do this. '''
-    if position == "1":
-        available_moves.remove("1")
-    elif position == "2":
-        available_moves.remove("2")
-    elif position == "3":
-        available_moves.remove("3")
-    elif position == "4":
-        available_moves.remove("4")
-    elif position == "5":
-        available_moves.remove("5")
-    elif position == "6":
-        available_moves.remove("6")
-    elif position == "7":
-        available_moves.remove("7")
-    elif position == "8":
-        available_moves.remove("8")
-    elif position == "9":
-        available_moves.remove("9")
-    '''fixes input so it matches board indexes'''
-    position = int(position) -1
-    board[position] = player
-    count += 1
-    print("Turn " + str(count))
-    display_board()
+    valid_move = False
+
+    while not valid_move:
     
+        while position not in available_moves:
+            position = input("Invalid move. Enter new position: ")
+        ''' There must be an easier way to do this. '''
+        if position == "1":
+            available_moves.remove("1")
+        elif position == "2":
+            available_moves.remove("2")
+        elif position == "3":
+            available_moves.remove("3")
+        elif position == "4":
+            available_moves.remove("4")
+        elif position == "5":
+            available_moves.remove("5")
+        elif position == "6":
+            available_moves.remove("6")
+        elif position == "7":
+            available_moves.remove("7")
+        elif position == "8":
+            available_moves.remove("8")
+        elif position == "9":
+            available_moves.remove("9")
+        '''fixes input so it matches board indexes'''
+        position = int(position) -1
+
+        if board[position] == " ":
+            ''' Checks if position is available. If it is, breaks the while loop.'''
+            valid_move = True
+        else:
+            print("position already taken. Enter new position:")
+        board[position] = player
+        count += 1
+        print("Round " + str(count))
+        display_board()
 
 game()
-
-
-
