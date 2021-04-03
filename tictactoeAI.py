@@ -5,6 +5,7 @@ board ={1:" ",2:" ",3:" ",
         7:" ",8:" ",9:" "}
 
 def print_board(board):
+    ''' Prints visual board in terminal'''
     print()
     print(" " + board[1] + " | " + board[2] + " | " + board[3] + "     1 | 2 | 3")
     print("---+---+---")
@@ -14,3 +15,21 @@ def print_board(board):
     print()
 
 print_board(board)
+
+def position_is_free(position):
+    ''' Checks if position is empty and returns boolean value'''
+    if (board[position] == " "):
+        return True
+    else: 
+        return False
+
+def insert_letter(letter,position):
+    ''' Checks if position is empty and replaces it with letter and prints the board'''
+    if position_is_free(position):
+        board[position] = letter
+        print_board(board)
+    else:
+        print("Invalid position")
+        input(int("Input new position: "))
+        insert_letter(letter,position)
+        return
