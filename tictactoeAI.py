@@ -50,26 +50,27 @@ def position_is_free(position):
 
 def check_win():
     # Checks rows
-    if (board[1] == board[2] and board[1] == board[3] and board[1] != " "):
+    if (board[1] == board[2] and board[1] == board[3] and board[1] != ' '):
         return True
-    elif (board[4] == board[5] and board[4] == board[6] and board[4] != " "):
+    elif (board[4] == board[5] and board[4] == board[6] and board[4] != ' '):
         return True
-    elif (board[7] == board[8] and board[7] == board[9] and board[7] != " "):
+    elif (board[7] == board[8] and board[7] == board[9] and board[7] != ' '):
         return True
-    # Checks columns
-    elif (board[1] == board[4] and board[1] == board[7] and board[1] != " "):
+    # Check columns
+    elif (board[1] == board[4] and board[1] == board[7] and board[1] != ' '):
         return True
-    elif (board[2] == board[5] and board[2] == board[8] and board[2] != " "):
+    elif (board[2] == board[5] and board[2] == board[8] and board[2] != ' '):
         return True
-    elif (board[3] == board[6] and board[3] == board[9] and board[3] != " "):
+    elif (board[3] == board[6] and board[3] == board[9] and board[3] != ' '):
         return True
-    # Checks diagonals    
-    elif (board[1] == board[5] and board[1] == board[9] and board[1] != " "):
+    # Check diagonals
+    elif (board[1] == board[5] and board[1] == board[9] and board[1] != ' '):
         return True
-    elif (board[3] == board[5] and board[3] == board[7] and board[3] != " "):
+    elif (board[7] == board[5] and board[7] == board[3] and board[7] != ' '):
         return True
     else:
         return False
+
 
 
 def check_draw():
@@ -85,6 +86,12 @@ def insert_letter(letter,position):
         board[position] = letter
         print_board(board)
         if (check_win()):
+            if letter == computer:
+                print("Computer wins!")
+                exit()
+            elif letter == player:
+                print("Player wins!")
+                exit()
             return
         
         if(check_draw()):
@@ -95,3 +102,20 @@ def insert_letter(letter,position):
         insert_letter(letter,position)
         return
 
+def player_move():
+    position = int(input("Enter position for " + player + ": "))
+    insert_letter(player,position)
+    return
+
+def computer_move(): 
+    position = int(input("Enter position for " + computer + ": "))
+    insert_letter(computer,position)
+    return
+
+while not check_win():
+    if computer == "X":
+        computer_move()
+        player_move()
+    elif player == "X":
+        player_move()
+        computer_move()
