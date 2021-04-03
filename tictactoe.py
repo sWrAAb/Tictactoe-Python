@@ -9,6 +9,7 @@ board = [" "," "," "," "," "," "," "," "," "]
 
 active_game = True
 count = 0
+tie = False
 
 # Winner
 
@@ -18,24 +19,11 @@ winner = None
 
 current_player = "X"
 
-# Random player
-
-def random_player():
-    '''Randomize starting player'''
-    if random.randint(0,1) == 0:
-        print("Computer is first")
-        return "Computer"
-    else:
-        print("Player is first")
-        return "Player"
-
-random_player()
-
 # Avaliable moves
 
 available_moves = ["1","2","3","4","5","6","7","8","9"]
 
-# Available choice
+# Available choice.
 
 available_choices= ["y","Y","n","N"]
 
@@ -125,8 +113,8 @@ def check_tie():
     global tie
     if " " not in board and winner == None:
         active_game = False
-        print("Tie!")
         tie = True
+        print("Tie!")
     return
 
 def switch_player():
@@ -139,14 +127,28 @@ def switch_player():
     return
 
 def restart():
+    ''' Resets board list and global varables'''
     choice = input("Do you want to play again?(y/n) ")
     
     if choice == "y" or choice == "Y":
-            global board
-            global active_game
-            global count
-            global available_moves
-            global current_player
+        global board
+        global active_game
+        global count
+        global available_moves
+        global current_player
+        board = [" "," "," "," "," "," "," "," "," "]
+        available_moves = ["1","2","3","4","5","6","7","8","9"]
+        active_game = True
+        count = 0
+        winner = None
+        current_player = "X"
+        game()
+    elif choice == "n" or choice == "N":
+        exit() # exit program
+    while choice not in available_choices:
+        ''' If wrong input was entered program stops working so I had to repeat'''
+        choice = input("Do you want to play again?(y/n) ")
+        if choice == "y" or choice == "Y":
             board = [" "," "," "," "," "," "," "," "," "]
             available_moves = ["1","2","3","4","5","6","7","8","9"]
             active_game = True
@@ -154,11 +156,7 @@ def restart():
             winner = None
             current_player = "X"
             game()
-    elif choice == "n" or choice == "N":
-            exit() # exit program
-    
-    while choice not in available_choices:
-        choice = input("Do you want to play again?(y/n) ")
+
 
 def game():
     '''Main function for gameplay'''
@@ -175,7 +173,10 @@ def game():
     elif winner == None:
         return
 
-    if not active_game:
+    if active_game == False:
+        restart()
+    ''' For some reason game didn't restart on tie so...'''
+    if tie == True:
         restart()
 
 def game_turn(player):
@@ -187,7 +188,7 @@ def game_turn(player):
     valid_move = False
 
     while not valid_move:
-    
+        ''' Fix for entering wrong input'''
         while position not in available_moves:
             position = input("Invalid move. Enter new position: ")
         ''' There must be an easier way to do this. '''
@@ -221,5 +222,4 @@ def game_turn(player):
         count += 1
         print("Round " + str(count))
         display_board()
-
 game()
