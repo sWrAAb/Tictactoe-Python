@@ -23,11 +23,26 @@ def position_is_free(position):
     else: 
         return False
 
+def check_win():
+    pass
+
+def check_draw():
+    ''' Checks positions on board. If there is no free spaces returns draw'''
+    for key in board.keys():
+        if board[key] == " ":
+            return False
+        return True
+
 def insert_letter(letter,position):
     ''' Checks if position is empty and replaces it with letter and prints the board'''
     if position_is_free(position):
         board[position] = letter
         print_board(board)
+        if (check_win()):
+            return
+        
+        if(check_draw()):
+            return
     else:
         print("Invalid position")
         input(int("Input new position: "))
