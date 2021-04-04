@@ -80,7 +80,7 @@ def check_draw():
 
 def insert_letter(letter,position):
     ''' Checks if position is empty and replaces it with letter and prints the board. 
-        Tried to fix if symbol is placed on existing symbol but it does now work.
+        Tried to fix if symbol is placed on existing symbol but it does now work properly.
         So don't place symbol over existing symbol'''
     if position_is_free(position):
         board[position] = letter
@@ -101,7 +101,6 @@ def insert_letter(letter,position):
         print("Invalid position")
         input(int("Input new position: "))
         insert_letter(letter,position)
-        return
 
 def player_move():
     ''' Fixes wrong input for player '''
@@ -111,18 +110,28 @@ def player_move():
             position = int(position)
             insert_letter(player,position)
             return
+        except KeyError:
+            continue
         except ValueError:
             continue
         else:
             break
 
 def computer_move(): 
-    position = int(input("Enter position for " + computer + ": "))
-    insert_letter(computer,position)
-    return
+    best_score = -10
+    best_move = 0
+
+    for key in board.keys():
+        if (board[key]) == " ":
+            board[key] = computer
+            score = minimax(board, False)
+            board[key] = " "
+            if (score > best_score):
+                best_score = score
+                best_move = key
 
 while not check_win():
-    ''' Switches players while game is running'''
+    ''' Switches players while game is not won'''
     if computer == "X":
         print("Computer's turn")
         computer_move()
