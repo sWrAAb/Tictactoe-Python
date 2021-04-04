@@ -4,9 +4,12 @@ import random
 player = None
 computer = None
 
+# Lists with available input options
 
+available_moves = ["1","2","3","4","5","6","7","8","9"]
+available_choices = ["y","Y","n","N"]
 
-# Board as dictionaries 
+# Empty board as dictionary with keys 
 
 board ={1:" ",2:" ",3:" ",
         4:" ",5:" ",6:" ",
@@ -15,28 +18,30 @@ board ={1:" ",2:" ",3:" ",
 # Random player start
 
 def random_player():
+    ''' Overwrites global variables '''
     global player
     global computer
-    '''Randomize starting player'''
+    '''Randomize starting player using python random'''
     if random.randint(0,1) == 0:
         computer = "X"
         player = "O"
-        print("Computer is first")
     else:
         player = "X"
         computer = "O"
-        print("Player is first")
 
 random_player()
 
+
 def print_board(board):
-    ''' Prints visual board in terminal'''
+    ''' Prints visual board in terminal. Available moves was planned to replace index with empty 
+        position but could not make it work for computer moves.'''
+    print("\033c", end="")
     print()
-    print(" " + board[1] + " | " + board[2] + " | " + board[3] + "     1 | 2 | 3")
+    print(" " + board[1] + " | " + board[2] + " | " + board[3] + "     " + available_moves[0] + " | " + available_moves[1] + " | " + available_moves[2])
     print("---+---+---")
-    print(" " + board[4] + " | " + board[5] + " | " + board[6] + "     4 | 5 | 6")
+    print(" " + board[4] + " | " + board[5] + " | " + board[6] + "     " + available_moves[3] + " | " + available_moves[4] + " | " + available_moves[5])
     print("---+---+---")
-    print(" " + board[7] + " | " + board[8] + " | " + board[9] + "     7 | 8 | 9")
+    print(" " + board[7] + " | " + board[8] + " | " + board[9] + "     " + available_moves[6] + " | " + available_moves[7] + " | " + available_moves[8])
     print()
 
 print_board(board)
@@ -49,6 +54,7 @@ def position_is_free(position):
         return False
 
 def check_win():
+    ''' checks rows, columns and diagonals for matching symbols and returns boolean '''
     # Checks rows
     if board[1] == board[2] and board[1] == board[3] and board[1] != ' ':
         return True
@@ -73,18 +79,22 @@ def check_win():
 
 
 def check_symbol_win(symbol):
+    ''' Checks board for minimax algorithm '''
+    # Checks rows
     if board[1] == board[2] and board[1] == board[3] and board[1] == symbol:
         return True
     elif (board[4] == board[5] and board[4] == board[6] and board[4] == symbol):
         return True
     elif (board[7] == board[8] and board[7] == board[9] and board[7] == symbol):
         return True
+    # Check columns
     elif (board[1] == board[4] and board[1] == board[7] and board[1] == symbol):
         return True
     elif (board[2] == board[5] and board[2] == board[8] and board[2] == symbol):
         return True
     elif (board[3] == board[6] and board[3] == board[9] and board[3] == symbol):
         return True
+    # Check diagonals
     elif (board[1] == board[5] and board[1] == board[9] and board[1] == symbol):
         return True
     elif (board[7] == board[5] and board[7] == board[3] and board[7] == symbol):
@@ -102,9 +112,7 @@ def check_draw():
     return True
 
 def insert_letter(letter,position):
-    ''' Checks if position is empty and replaces it with letter and prints the board. 
-        Tried to fix if symbol is placed on existing symbol but it does now work properly.
-        So don't place symbol over existing symbol'''
+    ''' Checks if position is empty and replaces it with letter and prints the board '''
     if position_is_free(position):
         board[position] = letter
         print_board(board)
@@ -122,6 +130,7 @@ def insert_letter(letter,position):
             restart_game()
     else:
         print("Invalid position")
+        ''' if invalid position following code repeats until correct position is entered '''
         input(int("Input new position: "))
         insert_letter(letter,position)
 
@@ -141,9 +150,11 @@ def player_move():
             break
 
 def computer_move():
-    best_score = -800
+    ''' Starting values for initialization '''
+    best_score = -500
     best_move = 0
     for key in board.keys():
+        ''' Maximiser goes thru all moves to find best move for using minimax algorithm '''
         if (board[key] == ' '):
             board[key] = computer
             score = minimax(board, 0, False)
@@ -157,6 +168,7 @@ def computer_move():
 
 
 def minimax(board, depth, is_maximizing):
+    ''' Adds value on simulated turns 1 for computer win, 0 for draw and -1 for player win'''
     if (check_symbol_win(computer)):
         return 1
     elif (check_symbol_win(player)):
@@ -165,7 +177,8 @@ def minimax(board, depth, is_maximizing):
         return 0
 
     if (is_maximizing):
-        best_score = -800
+        ''' Maximizer '''
+        best_score = -500
         for key in board.keys():
             if (board[key] == ' '):
                 board[key] = computer
@@ -176,7 +189,8 @@ def minimax(board, depth, is_maximizing):
         return best_score
 
     else:
-        best_score = 800
+        ''' Minimizer '''
+        best_score = 500
         for key in board.keys():
             if (board[key] == ' '):
                 board[key] = player
@@ -189,16 +203,17 @@ def minimax(board, depth, is_maximizing):
 
 
     if check_symbol_win(player):
-        return -800
+        return -500
 
     elif check_symbol_win(computer):
-        return 800
+        return 500
 
     elif check_draw():
         return 0
     
     if is_maximizing:
-        best_score = -800
+        ''' This part finds best score for each possible position until it reaches terminal state'''
+        best_score = -500
 
         for key in board.keys():
             if (board[key]) == " ":
@@ -210,7 +225,7 @@ def minimax(board, depth, is_maximizing):
         return best_score
 
     else:
-        best_score = 800
+        best_score = 500
         for key in board.keys():
             if (board[key] == ' '):
                 board[key] = player
@@ -221,33 +236,65 @@ def minimax(board, depth, is_maximizing):
         return best_score
 
 def restart_game():
+    ''' restart game function sometimes does not work properly.
+        When it does work properly overwrites global variables and prints clean game board'''
+    print()
     choice = input("Do you want to play again?(y/n) ")
     print()
     if choice == "y" or choice == "Y":
         global board
+        global player
+        global computer
         board ={1:" ",2:" ",3:" ",
             4:" ",5:" ",6:" ",
             7:" ",8:" ",9:" "}
         random_player()
         print_board(board)
-        check_win = False
+        while not check_win():
+            ''' Switches players while game is not won'''
+            if computer == "X":
+                print("Computer's turn")
+                print()
+                computer_move()
+                print("Player's turn")
+                print()
+                player_move()
+            elif player == "X":
+                print("Player's turn")
+                print()
+                player_move()
+                print("Computer's turn")
+                print()
+                computer_move()
+    elif choice == "n" or choice == "N":
+        exit()
+    while choice not in available_choices:
+        ''' If wrong input was entered program stops working so I had to repeat'''
+        choice = input("Do you want to play again?(y/n) ")
+        print()
+        if choice == "y" or choice == "Y":
+            board ={1:" ",2:" ",3:" ",
+                4:" ",5:" ",6:" ",
+                7:" ",8:" ",9:" "}
+            random_player()
+            print_board(board)
+        elif choice == "n" or choice == "N":
+            exit()
 
 
 while not check_win():
     ''' Switches players while game is not won'''
     if computer == "X":
         print("Computer's turn")
+        print()
         computer_move()
         print("Player's turn")
+        print()
         player_move()
     elif player == "X":
         print("Player's turn")
+        print()
         player_move()
         print("Computer's turn")
+        print()
         computer_move()
-
-
-    
-        
-
-        
