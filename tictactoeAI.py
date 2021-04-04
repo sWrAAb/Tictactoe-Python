@@ -4,6 +4,8 @@ import random
 player = None
 computer = None
 
+
+
 # Board as dictionaries 
 
 board ={1:" ",2:" ",3:" ",
@@ -48,7 +50,7 @@ def position_is_free(position):
 
 def check_win():
     # Checks rows
-    if (board[1] == board[2] and board[1] == board[3] and board[1] != ' '):
+    if board[1] == board[2] and board[1] == board[3] and board[1] != ' ':
         return True
     elif (board[4] == board[5] and board[4] == board[6] and board[4] != ' '):
         return True
@@ -65,6 +67,27 @@ def check_win():
     elif (board[1] == board[5] and board[1] == board[9] and board[1] != ' '):
         return True
     elif (board[7] == board[5] and board[7] == board[3] and board[7] != ' '):
+        return True
+    else:
+        return False
+
+
+def check_symbol_win(symbol):
+    if board[1] == board[2] and board[1] == board[3] and board[1] == symbol:
+        return True
+    elif (board[4] == board[5] and board[4] == board[6] and board[4] == symbol):
+        return True
+    elif (board[7] == board[8] and board[7] == board[9] and board[7] == symbol):
+        return True
+    elif (board[1] == board[4] and board[1] == board[7] and board[1] == symbol):
+        return True
+    elif (board[2] == board[5] and board[2] == board[8] and board[2] == symbol):
+        return True
+    elif (board[3] == board[6] and board[3] == board[9] and board[3] == symbol):
+        return True
+    elif (board[1] == board[5] and board[1] == board[9] and board[1] == symbol):
+        return True
+    elif (board[7] == board[5] and board[7] == board[3] and board[7] == symbol):
         return True
     else:
         return False
@@ -88,15 +111,15 @@ def insert_letter(letter,position):
         if (check_win()):
             if letter == computer:
                 print("Computer wins!")
-                exit()
+                restart_game()
             elif letter == player:
                 print("Player wins!")
-                exit()
+                restart_game()
             return
         
         if(check_draw()):
             print("Draw!")
-            exit()
+            restart_game()
     else:
         print("Invalid position")
         input(int("Input new position: "))
@@ -117,18 +140,98 @@ def player_move():
         else:
             break
 
-def computer_move(): 
-    best_score = -10
+def computer_move():
+    best_score = -800
     best_move = 0
-
     for key in board.keys():
-        if (board[key]) == " ":
+        if (board[key] == ' '):
             board[key] = computer
-            score = minimax(board, False)
-            board[key] = " "
+            score = minimax(board, 0, False)
+            board[key] = ' '
             if (score > best_score):
                 best_score = score
                 best_move = key
+
+    insert_letter(computer, best_move)
+    return
+
+
+def minimax(board, depth, is_maximizing):
+    if (check_symbol_win(computer)):
+        return 1
+    elif (check_symbol_win(player)):
+        return -1
+    elif (check_draw()):
+        return 0
+
+    if (is_maximizing):
+        best_score = -800
+        for key in board.keys():
+            if (board[key] == ' '):
+                board[key] = computer
+                score = minimax(board, depth + 1, False)
+                board[key] = ' '
+                if (score > best_score):
+                    best_score = score
+        return best_score
+
+    else:
+        best_score = 800
+        for key in board.keys():
+            if (board[key] == ' '):
+                board[key] = player
+                score = minimax(board, depth + 1, True)
+                board[key] = ' '
+                if (score < best_score):
+                    best_score = score
+        return best_score
+        
+
+
+    if check_symbol_win(player):
+        return -800
+
+    elif check_symbol_win(computer):
+        return 800
+
+    elif check_draw():
+        return 0
+    
+    if is_maximizing:
+        best_score = -800
+
+        for key in board.keys():
+            if (board[key]) == " ":
+                board[key] = computer
+                score = minimax(board, 0, False)
+                board[key] = " "
+                if (score > best_score):
+                    best_score = score
+        return best_score
+
+    else:
+        best_score = 800
+        for key in board.keys():
+            if (board[key] == ' '):
+                board[key] = player
+                score = minimax(board, 0, True)
+                board[key] = ' '
+                if (score < best_score):
+                    best_score = score
+        return best_score
+
+def restart_game():
+    choice = input("Do you want to play again?(y/n) ")
+    print()
+    if choice == "y" or choice == "Y":
+        global board
+        board ={1:" ",2:" ",3:" ",
+            4:" ",5:" ",6:" ",
+            7:" ",8:" ",9:" "}
+        random_player()
+        print_board(board)
+        check_win = False
+
 
 while not check_win():
     ''' Switches players while game is not won'''
@@ -142,4 +245,9 @@ while not check_win():
         player_move()
         print("Computer's turn")
         computer_move()
+
+
+    
+        
+
         
