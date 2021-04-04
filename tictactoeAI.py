@@ -1,8 +1,8 @@
 import random
 
+# Global variables used for random player start.
 player = None
 computer = None
-
 
 # Board as dictionaries 
 
@@ -26,8 +26,6 @@ def random_player():
         print("Player is first")
 
 random_player()
-print(player)
-print(computer)
 
 def print_board(board):
     ''' Prints visual board in terminal'''
@@ -74,14 +72,16 @@ def check_win():
 
 
 def check_draw():
-    ''' Checks positions on board. If there is no free spaces returns drawgit '''
+    ''' Checks positions on board. If there is no free spaces returns draw '''
     for key in board.keys():
-        if board[key] == " ":
+        if (board[key] == ' '):
             return False
-        return True
+    return True
 
 def insert_letter(letter,position):
-    ''' Checks if position is empty and replaces it with letter and prints the board'''
+    ''' Checks if position is empty and replaces it with letter and prints the board. 
+        Tried to fix if symbol is placed on existing symbol but it does now work.
+        So don't place symbol over existing symbol'''
     if position_is_free(position):
         board[position] = letter
         print_board(board)
@@ -95,7 +95,8 @@ def insert_letter(letter,position):
             return
         
         if(check_draw()):
-            return
+            print("Draw!")
+            exit()
     else:
         print("Invalid position")
         input(int("Input new position: "))
@@ -103,9 +104,17 @@ def insert_letter(letter,position):
         return
 
 def player_move():
-    position = int(input("Enter position for " + player + ": "))
-    insert_letter(player,position)
-    return
+    ''' Fixes wrong input for player '''
+    while True:
+        try:  
+            position = input("Enter position for " + player + ": ")
+            position = int(position)
+            insert_letter(player,position)
+            return
+        except ValueError:
+            continue
+        else:
+            break
 
 def computer_move(): 
     position = int(input("Enter position for " + computer + ": "))
@@ -113,9 +122,15 @@ def computer_move():
     return
 
 while not check_win():
+    ''' Switches players while game is running'''
     if computer == "X":
+        print("Computer's turn")
         computer_move()
+        print("Player's turn")
         player_move()
     elif player == "X":
+        print("Player's turn")
         player_move()
+        print("Computer's turn")
         computer_move()
+        

@@ -1,14 +1,18 @@
 import random
-from os import system
 
-# Board
+# Empty board
 
 board = [" "," "," "," "," "," "," "," "," "]
 
 # Active game. Game is going while this is true
 
 active_game = True
+
+# Counts turns
 count = 0
+
+# Does not work properly without this
+
 tie = False
 
 # Winner
@@ -191,7 +195,7 @@ def game_turn(player):
         ''' Fix for entering wrong input'''
         while position not in available_moves:
             position = input("Invalid move. Enter new position: ")
-        ''' There must be an easier way to do this. '''
+        ''' This updates available moves. There must be an easier way to do this. '''
         if position == "1":
             available_moves.remove("1")
         elif position == "2":
