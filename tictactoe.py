@@ -218,7 +218,7 @@ def game_turn(player):
         position = int(position) -1
 
         if board[position] == " ":
-            ''' Checks if position is available. If it is, breaks the while loop.'''
+            ''' Checks if position is available. If it is, breaks the while loop. '''
             valid_move = True
         else:
             print("position already taken. Enter new position:")
