@@ -35,7 +35,6 @@ random_player()
 def print_board(board):
     ''' Prints visual board in terminal. Available moves was planned to replace index with empty 
         position but could not make it work for computer moves.'''
-    print("\033c", end="")
     print()
     print(" " + board[1] + " | " + board[2] + " | " + board[3] + "     " + available_moves[0] + " | " + available_moves[1] + " | " + available_moves[2])
     print("---+---+---")
@@ -54,7 +53,7 @@ def position_is_free(position):
         return False
 
 def check_win():
-    ''' checks rows, columns and diagonals for matching symbols and returns boolean '''
+    ''' Checks rows, columns and diagonals for matching symbols and returns boolean '''
     # Checks rows
     if board[1] == board[2] and board[1] == board[3] and board[1] != ' ':
         return True
@@ -79,7 +78,7 @@ def check_win():
 
 
 def check_symbol_win(symbol):
-    ''' Checks board for minimax algorithm '''
+    ''' Checks board for minimax algorithm. It checks symbols X and O '''
     # Checks rows
     if board[1] == board[2] and board[1] == board[3] and board[1] == symbol:
         return True
@@ -105,7 +104,7 @@ def check_symbol_win(symbol):
 
 
 def check_draw():
-    ''' Checks positions on board. If there is no free spaces returns draw '''
+    ''' Checks positions on board. If there is no free positions returns draw '''
     for key in board.keys():
         if (board[key] == ' '):
             return False
@@ -151,14 +150,15 @@ def player_move():
 
 def computer_move():
     ''' Starting values for initialization '''
-    best_score = -500
+    best_score = -1000
     best_move = 0
     for key in board.keys():
-        ''' Maximiser goes thru all moves to find best move for using minimax algorithm '''
+        ''' Maximiser goes thru all moves to find best move for computer using minimax algorithm '''
         if (board[key] == ' '):
             board[key] = computer
             score = minimax(board, 0, False)
             board[key] = ' '
+            ''' Assigns best move to an empty decision '''
             if (score > best_score):
                 best_score = score
                 best_move = key
@@ -178,7 +178,7 @@ def minimax(board, depth, is_maximizing):
 
     if (is_maximizing):
         ''' Maximizer '''
-        best_score = -500
+        best_score = -1000
         for key in board.keys():
             if (board[key] == ' '):
                 board[key] = computer
@@ -190,7 +190,7 @@ def minimax(board, depth, is_maximizing):
 
     else:
         ''' Minimizer '''
-        best_score = 500
+        best_score = 1000
         for key in board.keys():
             if (board[key] == ' '):
                 board[key] = player
@@ -203,17 +203,17 @@ def minimax(board, depth, is_maximizing):
 
 
     if check_symbol_win(player):
-        return -500
+        return -1000
 
     elif check_symbol_win(computer):
-        return 500
+        return 1000
 
     elif check_draw():
         return 0
     
     if is_maximizing:
         ''' This part finds best score for each possible position until it reaches terminal state'''
-        best_score = -500
+        best_score = -1000
 
         for key in board.keys():
             if (board[key]) == " ":
@@ -225,7 +225,7 @@ def minimax(board, depth, is_maximizing):
         return best_score
 
     else:
-        best_score = 500
+        best_score = 1000
         for key in board.keys():
             if (board[key] == ' '):
                 board[key] = player
@@ -269,7 +269,8 @@ def restart_game():
     elif choice == "n" or choice == "N":
         exit()
     while choice not in available_choices:
-        ''' If wrong input was entered program stops working so I had to repeat'''
+        ''' If wrong input was entered program stops working so I had to repeat.
+            Sometimes after wrong input if the right input is entered, game skips, or repeats player'''
         choice = input("Do you want to play again?(y/n) ")
         print()
         if choice == "y" or choice == "Y":
