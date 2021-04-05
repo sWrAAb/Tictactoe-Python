@@ -129,7 +129,7 @@ def insert_letter(letter,position):
             restart_game()
     else:
         print("Invalid position")
-        ''' if invalid position following code repeats until correct position is entered '''
+        ''' if invalid position is inputted following code repeats until correct position is entered '''
         input(int("Input new position: "))
         insert_letter(letter,position)
 
@@ -158,7 +158,7 @@ def computer_move():
             board[key] = computer
             score = minimax(board, 0, False)
             board[key] = ' '
-            ''' Assigns best move to an empty decision '''
+            ''' Assigns best move to an empty position '''
             if (score > best_score):
                 best_score = score
                 best_move = key
@@ -284,7 +284,7 @@ def restart_game():
 
 
 while not check_win():
-    ''' Switches players while game is not won'''
+    ''' Switches players each turn until game is won or draw'''
     if computer == "X":
         print("Computer's turn")
         print()
